@@ -30,3 +30,10 @@ For testing purposes, use the following accounts:
    ```bash
    npm install
    cd client && npm install
+
+PORT=4000
+MONGODB_URI=mongodb+srv://NaazBano:TCYvqyh2vxkGquWh@hospital.hrd6ijx.mongodb.net
+JWT_SECRET=naazbano123
+
+I aimed to make this system highly scalable with advanced features like real-time analytics and more granular permissions. However, due to an urgent personal commitment yesterday and limited time today, I focused on delivering a solid, bug-free core functional system within the deadline. I have ensured that the architecture is clean and ready for further feature expansions.
+   
