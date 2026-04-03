@@ -29,7 +29,6 @@ const AdmissionsList = () => {
         if(token) getAdmissions();
     }, [token]);
 
-    // Delete Function (Admin Only)
     const handleDelete = async (id) => {
         if (window.confirm("Are you sure you want to delete this record?")) {
             try {
@@ -47,7 +46,7 @@ const AdmissionsList = () => {
 
     return (
         <div className="space-y-6">
-            {/* Top Bar (Same as before) */}
+        
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 rounded-[20px] border border-gray-100 shadow-sm">
                 <div className="relative flex-1 max-w-md">
                     <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />

@@ -13,7 +13,6 @@ const DoctorPatientList = () => {
            
 
 
-    // 2. Role ko lowercase mein convert karein (admin / doctor)
     const userRole = user?.role?.toLowerCase() || 'doctor';
     useEffect(() => {
         const fetchPatients = async () => {

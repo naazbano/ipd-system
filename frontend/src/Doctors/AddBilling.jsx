@@ -10,7 +10,7 @@ const AddBilling = () => {
     const [service, setService] = useState({ serviceName: '', rate: '', qty: 1 });
 
     useEffect(() => {
-        // Patient ki basic info dikhane ke liye fetch
+      
         const fetchPatient = async () => {
             try {
                 const res = await axios.get(`http://localhost:4000/api/admissions/${id}`);
@@ -40,7 +40,6 @@ const AddBilling = () => {
                 <ArrowLeft size={20} /> Back to List
             </button>
 
-            {/* Patient Header Summary */}
             {patient && (
                 <div className="bg-white p-6 rounded-[24px] shadow-sm border border-gray-100 flex justify-between items-center">
                     <div className="flex items-center gap-4">
@@ -58,7 +57,7 @@ const AddBilling = () => {
                 </div>
             )}
 
-            {/* Add Bill Form */}
+         
             <div className="bg-white rounded-[32px] shadow-xl p-10 border border-gray-50">
                 <div className="flex items-center gap-3 mb-8">
                     <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl">

@@ -14,15 +14,14 @@ const admissionSchema = new mongoose.Schema({
     admissionDate: { type: Date, default: Date.now },
     status: { type: String, enum: ['Admitted', 'Discharged'], default: 'Admitted' },
     
-    // Array of services added by Doctors
     services: [serviceSchema],
 
-    // Audit & Tracking fields
+
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 }, { timestamps: true });
 
-// Data Integrity: Prevent duplicate services with same name in one admission
+n
 admissionSchema.pre('save', async function () {
     const serviceNames = this.services.map(s => s.serviceName.toLowerCase());
     const hasDuplicate = serviceNames.some((name, index) => serviceNames.indexOf(name) !== index);
@@ -30,6 +29,6 @@ admissionSchema.pre('save', async function () {
     if (hasDuplicate) {
         throw new Error('Duplicate services are not allowed in one admission.');
     }
-    // Agar async function hai toh next() ki zaroorat nahi hoti
+   
 });
 export default mongoose.model('Admission', admissionSchema);

@@ -1,7 +1,7 @@
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 
-// Token generator function
+
 const generateToken = (id, role) => {
     return jwt.sign({ id, role }, process.env.JWT_SECRET, {
         expiresIn: '30d',
@@ -35,7 +35,7 @@ export const registerUser = async (req, res, next) => {
       });
     }
   } catch (error) {
-    next(error);   // 👈 ab ye work karega
+    next(error);   
   }
 };
 export const loginUser = async (req, res) => {

@@ -7,11 +7,10 @@ const ManageStaff = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [loading, setLoading] = useState(true);
 
-    // Fetch All Users (Doctors + Staff)
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                // Maan lijiye aapka endpoint /api/users hai jo sabko fetch karta hai
+                
                 const res = await axios.get('http://localhost:4000/api/users');
                 setUsers(res.data);
             } catch (err) {
@@ -23,7 +22,7 @@ const ManageStaff = () => {
         fetchUsers();
     }, []);
 
-    // Delete User Logic
+    
     const handleDelete = async (id, name) => {
         if (window.confirm(`Are you sure you want to remove ${name} from the system?`)) {
             try {

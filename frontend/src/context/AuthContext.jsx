@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Agar token hai toh refresh par user data dobara fetch karein
+        
         const storedUser = sessionStorage.getItem('user');
         if (storedUser && token) {
             setUser(JSON.parse(storedUser));
@@ -17,13 +17,12 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
     }, [token]);
 
-    // Login Function
-    // AuthContext.jsx ke login function mein ye change karein
+    
 const login = async (email, password) => {
     try {
         const res = await axios.post('http://localhost:4000/api/auth/login', { email, password });
         
-        // DHAYAN DEIN: Backend direct response de raha hai, res.data.user nahi
+        
         const userData = res.data; 
 
         setUser(userData);
@@ -37,7 +36,7 @@ const login = async (email, password) => {
         return { success: false, message: error.response?.data?.message || "Login failed" };
     }
 };
-    // Logout Function
+    
     const logout = () => {
         setUser(null);
         setToken(null);

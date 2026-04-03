@@ -73,7 +73,7 @@ const StaffDashboard = () => {
                 ))}
             </div>
 
-            {/* Bottom Section: Recent Table & Activity (Based on Image 40) */}
+          
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Recent Admissions Table */}
                 <div className="lg:col-span-2 bg-white rounded-[24px] border border-gray-100 shadow-sm p-6">

@@ -9,7 +9,6 @@ const Sidebar = () => {
   const location = useLocation();
   const { user, logout } = useContext(AuthContext);
 
-  // Role based menu items logic
   let menuItems = [];
 
   if (user?.role === 'Admin') {
@@ -37,7 +36,7 @@ const Sidebar = () => {
     ];
   }
 
-  // Admin ke liye Red theme aur baki ke liye Blue theme
+  
   const activeBg = user?.role === 'Admin' ? 'bg-blue-600 shadow-blue-100' : 'bg-blue-600 shadow-blue-100';
 
   return (

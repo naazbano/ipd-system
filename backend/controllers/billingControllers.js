@@ -7,7 +7,7 @@ export const addServiceToBill = async (req, res) => {
         const { admissionId, serviceName, rate, qty } = req.body;
         const lineTotal = Number(rate) * Number(qty);
 
-        // --- PART 1: Billing Table Update ---
+        
         let bill = await Billing.findOne({ admissionId });
         if (!bill) {
             bill = new Billing({ admissionId, services: [] });
@@ -17,8 +17,7 @@ export const addServiceToBill = async (req, res) => {
         bill.grandTotal = bill.subTotal;
         await bill.save();
 
-        // --- PART 2: Admission Table Update (Automatic) ---
-        // Hum Admission record dhundhenge aur uski 'services' array mein ye naya data push karenge
+       
         await Admission.findByIdAndUpdate(
             admissionId,
             { 
@@ -38,7 +37,7 @@ export const addServiceToBill = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-// Admission ID se bill get karne ka logic
+
 export const getBillByAdmission = async (req, res) => {
     try {
         const bill = await Billing.findOne({ admissionId: req.params.id }).populate('admissionId');

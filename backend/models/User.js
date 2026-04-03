@@ -14,15 +14,15 @@ const userSchema = new mongoose.Schema({
 
 // Password hashing before saving
 // Password hashing before saving
-userSchema.pre('save', async function () { // 'next' parameter hata diya
-    if (!this.isModified('password')) return; // return next() ki jagah sirf return
+userSchema.pre('save', async function () { 
+    if (!this.isModified('password')) return; 
 
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
-    // next() call karne ki zaroorat nahi hai
+   
 });
 
-// Password comparison method
+
 userSchema.methods.comparePassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };

@@ -64,7 +64,7 @@ const LayoutDashboard = () => {
                 ))}
             </div>
 
-            {/* 3. Patient List Table (Screenshot Layout) */}
+            
             <div className="bg-white rounded-[40px] shadow-sm border border-gray-100 overflow-hidden">
                 <div className="p-8 border-b border-gray-50 flex justify-between items-center">
                     <h2 className="text-xl font-black text-gray-800">Recent Admissions</h2>

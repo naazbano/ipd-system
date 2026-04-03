@@ -27,7 +27,7 @@ const AdmissionsList = () => {
 
     return (
         <div className="space-y-6">
-            {/* Top Bar: Search & Filter */}
+           
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 rounded-[20px] border border-gray-100 shadow-sm">
                 <div className="relative flex-1 max-w-md">
                     <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
@@ -47,7 +47,7 @@ const AdmissionsList = () => {
                 </div>
             </div>
 
-            {/* Main Table Card */}
+         
             <div className="bg-white rounded-[24px] border border-gray-100 shadow-sm overflow-hidden">
                 <div className="p-6 border-b border-gray-50">
                     <h2 className="text-lg font-bold text-gray-800">Recent Patient Records</h2>
