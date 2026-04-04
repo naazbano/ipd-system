@@ -20,7 +20,7 @@ const Register = () => {
 
     return (
         <div className="flex h-screen bg-gray-50">
-            {/* Left Side: Image/Design Placeholder (As per your Figma) */}
+          
             <div className="hidden lg:flex w-1/2 bg-blue-600 items-center justify-center text-white p-12">
                 <div>
                     <h1 className="text-4xl font-bold mb-4">Care & Management</h1>

@@ -69,7 +69,7 @@ function App() {
           } 
         />
 
-        {/* --- DOCTOR ROUTES (Structure Same Rahega) --- */}
+     
         <Route 
           path="/doctor/*" 
           element={

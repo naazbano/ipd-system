@@ -42,7 +42,7 @@ export const loginUser = async (req, res) => {
     const { email, password } = req.body;
     try {
         const user = await User.findOne({ email });
-        // comparePassword method humne model mein banaya hai
+      
         if (user && (await user.comparePassword(password))) {
             res.json({
                 _id: user._id,

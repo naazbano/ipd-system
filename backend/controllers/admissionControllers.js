@@ -26,12 +26,12 @@ export const addService = async (req, res) => {
 
         if (!admission) return res.status(404).json({ message: "Patient not found" });
 
-        // Nayi service add karein
+       
+        
         const newService = { serviceName, rate, qty };
         admission.services.push(newService);
 
-        // Total Bill recalculate karein
-        // Formula: Pehla total + (Naya rate * Nayi quantity)
+      
         admission.totalBill = (admission.totalBill || 0) + (Number(rate) * Number(qty));
 
         await admission.save();

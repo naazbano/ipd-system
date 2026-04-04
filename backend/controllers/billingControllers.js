@@ -24,7 +24,7 @@ export const addServiceToBill = async (req, res) => {
                 $push: { 
                     services: { 
                         serviceName, 
-                        price: rate, // Agar Admission model mein 'price' field hai
+                        price: rate, 
                         date: new Date() 
                     } 
                 } 
