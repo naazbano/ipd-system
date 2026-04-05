@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-
+import { BACKEND_URL } from '../utils/utils';
 const Register = () => {
     const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'Staff' });
     const navigate = useNavigate();
@@ -10,7 +10,7 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:4000/api/auth/register', formData);
+            await axios.post( `${BACKEND_URL}/auth/register`, formData);
             toast.success('Registration Successful! Please Login.');
             navigate('/login');
         } catch (error) {

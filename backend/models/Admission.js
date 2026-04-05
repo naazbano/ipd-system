@@ -21,7 +21,7 @@ const admissionSchema = new mongoose.Schema({
     updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 }, { timestamps: true });
 
-n
+
 admissionSchema.pre('save', async function () {
     const serviceNames = this.services.map(s => s.serviceName.toLowerCase());
     const hasDuplicate = serviceNames.some((name, index) => serviceNames.indexOf(name) !== index);

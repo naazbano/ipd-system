@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
-
+import { BACKEND_URL } from '../utils/utils';
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
     
 const login = async (email, password) => {
     try {
-        const res = await axios.post('http://localhost:4000/api/auth/login', { email, password });
+        const res = await axios.post(`${BACKEND_URL}/auth/login`, { email, password });
         
         
         const userData = res.data; 

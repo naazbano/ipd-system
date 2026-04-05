@@ -1,113 +1,151 @@
-import { useState, useEffect } from 'react';
+
+
+import { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { ReceiptIndianRupee, ArrowLeft, Plus } from 'lucide-react';
+import { ArrowLeft} from 'lucide-react';
+import { AuthContext } from '../context/AuthContext';
+import { BACKEND_URL } from '../utils/utils';
 
-const AddBilling = () => {
-    const { id } = useParams(); // Admission ID
+const GenerateBill = () => {
+    const { id } = useParams(); 
     const navigate = useNavigate();
-    const [patient, setPatient] = useState(null);
-    const [service, setService] = useState({ serviceName: '', rate: '', qty: 1 });
-
+    const [admission, setAdmission] = useState(null);
+    const [tax, setTax] = useState(0);
+    const [discount, setDiscount] = useState(0);
+    const [loading, setLoading] = useState(true);
+     const { user } = useContext(AuthContext);
     useEffect(() => {
-      
-        const fetchPatient = async () => {
+        const fetchAdmissionDetails = async () => {
             try {
-                const res = await axios.get(`http://localhost:4000/api/admissions/${id}`);
-                setPatient(res.data);
-            } catch (err) { console.log(err); }
+
+                const res = await axios.get(`${BACKEND_URL}/admissions/${id}`);
+                setAdmission(res.data);
+                setLoading(false);
+            } catch (err) {
+                console.error("Error fetching admission details:", err);
+                setLoading(false);
+            }
         };
-        fetchPatient();
+        if (id) fetchAdmissionDetails();
     }, [id]);
 
-    const handleBillingSubmit = async (e) => {
+    const services = admission?.services || [];
+    const subTotal = services.reduce((acc, curr) => acc + (curr.rate * curr.qty), 0);
+    const taxAmount = (subTotal * tax) / 100;
+    const grandTotal = subTotal + taxAmount - discount;
+
+    const handleFinalSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:4000/api/billing/add', {
+            
+            await axios.post(`${BACKEND_URL}/billing/generate`, {
                 admissionId: id,
-                ...service
+                taxPercent: tax,
+                discountAmount: discount
             });
-            alert("Service added to bill successfully!");
-            navigate(`/doctor/invoice/${id}`); // Bill add hone ke baad invoice dikhao
+            alert("Final Bill Generated Successfully!");
+        
+             const role = user?.role?.toLowerCase(); 
+            if (role === 'admin') {
+                navigate(`/admin/invoice/${id}`);
+            } else {
+        
+                navigate(`/doctor/invoice/${id}`);
+            }
         } catch (err) {
-            alert("Error adding bill");
+            alert("Error generating bill: " + err.response?.data?.message);
         }
     };
 
-    return (
-        <div className="p-6 max-w-4xl mx-auto space-y-6">
-            <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-gray-500 font-semibold">
-                <ArrowLeft size={20} /> Back to List
-            </button>
+    if (loading) return <div className="p-10 text-center font-bold">Loading Admission Details...</div>;
+    if (!admission) return <div className="p-10 text-center text-red-500">Admission Record Not Found!</div>;
 
-            {patient && (
-                <div className="bg-white p-6 rounded-[24px] shadow-sm border border-gray-100 flex justify-between items-center">
-                    <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-xl">
-                            {patient.patientName.charAt(0)}
+    return (
+        <div className="p-6 max-w-5xl mx-auto space-y-6 bg-gray-50/50 min-h-screen">
+            <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-gray-500 font-bold hover:text-indigo-600 transition">
+                <ArrowLeft size={20} /> Back
+            </button>
+            <div className="bg-white p-6 rounded-[24px] shadow-sm border border-gray-100 flex justify-between items-center">
+                <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 bg-indigo-600 text-white rounded-2xl flex items-center justify-center font-black text-xl">
+                        {admission.patientName?.charAt(0)}
+                    </div>
+                    <div>
+                        <h2 className="text-xl font-black text-gray-800">{admission.patientName}</h2>
+                        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                            Age: {admission.age} | Gender: {admission.gender}
+                        </p>
+                    </div>
+                </div>
+                <div className="text-right">
+                    <p className="text-xs font-bold text-gray-400 uppercase">Status</p>
+                    <span className="px-3 py-1 bg-green-100 text-green-600 rounded-full text-xs font-bold">{admission.status}</span>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <div className="lg:col-span-2 space-y-4">
+                    <div className="bg-white p-8 rounded-[32px] border border-gray-100 shadow-sm">
+                        <h3 className="text-lg font-black text-gray-800 mb-6">Services Rendered</h3>
+                        <div className="space-y-4">
+                            {services.map((s, index) => (
+                                <div key={index} className="flex justify-between items-center p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                                    <div>
+                                        <p className="font-bold text-gray-700">{s.serviceName}</p>
+                                        <p className="text-xs text-gray-400">₹{s.rate} x {s.qty}</p>
+                                    </div>
+                                    <p className="font-black text-gray-800">₹{s.rate * s.qty}</p>
+                                </div>
+                            ))}
+                            {services.length === 0 && <p className="text-gray-400 italic">No services added for this patient.</p>}
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div className="bg-white p-8 rounded-[32px] border border-indigo-100 shadow-xl shadow-indigo-50/50 h-fit sticky top-6">
+                    <h3 className="text-xl font-black text-gray-800 mb-6">Final Summary</h3>
+                    <form onSubmit={handleFinalSubmit} className="space-y-5">
+                        <div>
+                            <label className="text-xs font-black text-gray-400 uppercase ml-1">Tax (%)</label>
+                            <input 
+                                type="number" 
+                                className="w-full p-4 mt-1 bg-gray-50 rounded-2xl border-none focus:ring-2 focus:ring-indigo-500 font-bold"
+                                value={tax}
+                                onChange={(e) => setTax(Number(e.target.value))}
+                            />
                         </div>
                         <div>
-                            <h2 className="text-xl font-bold text-gray-800">{patient.patientName}</h2>
-                            <p className="text-sm text-gray-400">ID: {id.slice(-6).toUpperCase()}</p>
-                        </div>
-                    </div>
-                    <div className="text-right text-blue-600 font-bold">
-                        Status: <span className="bg-blue-50 px-3 py-1 rounded-full text-xs">Active Admission</span>
-                    </div>
-                </div>
-            )}
-
-         
-            <div className="bg-white rounded-[32px] shadow-xl p-10 border border-gray-50">
-                <div className="flex items-center gap-3 mb-8">
-                    <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl">
-                        <ReceiptIndianRupee size={24} />
-                    </div>
-                    <h1 className="text-2xl font-black text-gray-800">Add Billing Item</h1>
-                </div>
-
-                <form onSubmit={handleBillingSubmit} className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="flex flex-col gap-2">
-                            <label className="text-sm font-bold text-gray-600 ml-1">Service/Item Name</label>
-                            <input 
-                                type="text" 
-                                placeholder="Consultation, Medicine, X-Ray..."
-                                className="p-4 bg-gray-50 rounded-2xl border-none focus:ring-2 focus:ring-indigo-500 outline-none"
-                                onChange={(e) => setService({...service, serviceName: e.target.value})}
-                                required
-                            />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <label className="text-sm font-bold text-gray-600 ml-1">Rate (₹)</label>
+                            <label className="text-xs font-black text-gray-400 uppercase ml-1">Discount (₹)</label>
                             <input 
                                 type="number" 
-                                placeholder="500"
-                                className="p-4 bg-gray-50 rounded-2xl border-none focus:ring-2 focus:ring-indigo-500 outline-none"
-                                onChange={(e) => setService({...service, rate: e.target.value})}
-                                required
+                                className="w-full p-4 mt-1 bg-gray-50 rounded-2xl border-none focus:ring-2 focus:ring-indigo-500 font-bold"
+                                value={discount}
+                                onChange={(e) => setDiscount(Number(e.target.value))}
                             />
                         </div>
-                        <div className="flex flex-col gap-2 md:col-span-2">
-                            <label className="text-sm font-bold text-gray-600 ml-1">Quantity</label>
-                            <input 
-                                type="number" 
-                                min="1"
-                                defaultValue="1"
-                                className="p-4 bg-gray-50 rounded-2xl border-none focus:ring-2 focus:ring-indigo-500 outline-none"
-                                onChange={(e) => setService({...service, qty: e.target.value})}
-                                required
-                            />
-                        </div>
-                    </div>
 
-                    <button type="submit" className="w-full py-5 bg-indigo-600 text-white rounded-[20px] font-bold text-lg shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition flex items-center justify-center gap-2">
-                        <Plus size={20} /> Add to Patient Bill
-                    </button>
-                </form>
+                        <div className="pt-4 space-y-3 border-t border-dashed">
+                            <div className="flex justify-between font-bold text-gray-500">
+                                <span>Subtotal</span>
+                                <span>₹{subTotal}</span>
+                            </div>
+                            <div className="flex justify-between font-black text-gray-800 text-xl pt-2">
+                                <span>Grand Total</span>
+                                <span>₹{grandTotal.toFixed(2)}</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" className="w-full py-5 bg-indigo-600 text-white rounded-2xl font-black text-lg shadow-lg hover:bg-indigo-700 transition-all mt-4">
+                            Save & Generate Bill
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     );
 };
 
-export default AddBilling;
+export default GenerateBill;

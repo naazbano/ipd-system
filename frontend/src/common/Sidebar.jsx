@@ -1,7 +1,7 @@
 
 
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, UserPlus, ClipboardList, LogOut, HeartPulse, Users, UserCog, IndianRupee, ReceiptIndianRupee } from 'lucide-react';
+import { LayoutDashboard, UserPlus, ClipboardList, LogOut, HeartPulse, Users, IndianRupee, ReceiptIndianRupee } from 'lucide-react';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 
@@ -14,25 +14,24 @@ const Sidebar = () => {
   if (user?.role === 'Admin') {
     menuItems = [
       { name: 'Admin Dashboard', path: '/admin/dashboard', icon: <LayoutDashboard size={22} /> },
-      { name: 'Manage Staff', path: '/admin/manage-staff', icon: <UserCog size={22} /> },
        { name: 'New Admission', path: '/admin/admission-form', icon: <UserPlus size={22} /> },
       { name: 'All Admissions', path: '/admin/all-admissions', icon: <ClipboardList size={22} /> },
        { name: 'Patient Queue', path: '/admin/patients', icon: <Users size={22} /> },
-  
-      { name: 'Revenue Reports', path: '/admin/revenue', icon: <IndianRupee size={22} /> },
+      { name: 'Revenue Reports', path: '/admin/our-patients', icon: <IndianRupee size={22} /> },
     ];
   } else if (user?.role === 'Doctor') {
     menuItems = [
       { name: 'Dashboard', path: '/doctor/dashboard', icon: <LayoutDashboard size={22} /> },
       { name: 'Patient Queue', path: '/doctor/patients', icon: <Users size={22} /> },
-      { name: 'All Bills', path: '/doctor/all-bills', icon: <ReceiptIndianRupee size={22} /> },
+     { name: 'All Admissions', path: '/doctor/all-admissions', icon: <ClipboardList size={22} /> },
+      { name: 'Revenue Reports', path: '/doctor/our-patients', icon: <Users size={22} /> },
     ];
   } else {
     menuItems = [
       { name: 'Dashboard', path: '/staff/dashboard', icon: <LayoutDashboard size={22} /> },
       { name: 'New Admission', path: '/staff/admission-form', icon: <UserPlus size={22} /> },
       { name: 'All Admissions', path: '/staff/all-admissions', icon: <ClipboardList size={22} /> },
-      { name: 'Our Patients', path: '/staff/our-patients', icon: <Users size={22} /> },
+      { name: 'Revenue Reports', path: '/staff/our-patients', icon: <Users size={22} /> },
     ];
   }
 
